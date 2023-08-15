@@ -6,16 +6,20 @@
     "start": "next start"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.3",
+    "@apollo/client": "^3.8.1",
     "@apollo/server": "^4.3.0",
     "@as-integrations/next": "^1.2.0",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.5",
     "@neo4j/graphql": "^3.14.1",
     "apollo-server": "^3.12.0",
     "deepmerge": "^4.2.2",
     "graphql": "^16.6.0",
     "neo4j-driver": "^5.11.0",
     "next": "latest",
+    "next-auth": "^4.23.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0"
   }
 }

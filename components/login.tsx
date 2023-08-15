@@ -1,20 +1,22 @@
+import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 
-interface LoginProps {
-  onLogin: (username: string) => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Simulate API call to authenticate user
-    // Example: You would make an actual API request here
-    if (username === 'demo' && password === 'password') {
-      onLogin(username); // Notify parent component about successful login
-    } else {
+  const handleLogin = async () => {
+    const result = await signIn('credentials', {
+      username,
+      password,
+      redirect: false, // We'll handle redirection manually
+    });
+
+    if (result.error) {
       alert('Login failed. Please check your credentials.');
+    } else {
+      // Redirect to dashboard or wherever you want
+      window.location.href = '/dashboard';
     }
   };
 
