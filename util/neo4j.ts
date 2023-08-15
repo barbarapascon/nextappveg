@@ -4,15 +4,15 @@ import type { Driver } from 'neo4j-driver'
 let driver: Driver
 
 const defaultOptions = {
-  uri: process.env.NEO4J_URI,
-  username: process.env.NEO4J_USER,
-  password: process.env.NEO4J_PASSWORD,
+  uri: "bolt://2f1824e7.databases.neo4j.io:7687",
+  username: "neo4j",
+  password: "z4Tv1T9CDedjPTe9ueiZmjVJQK63yxCl2uGWYanAPkA",
 }
 
 export default function getDriver() {
   const { uri, username, password } = defaultOptions
   if (!driver) {
-    driver = neo4j.driver(uri, neo4j.auth.basic(username, password))
+    driver = neo4j.driver(uri, neo4j.auth.basic(username, password));
   }
 
   return driver

@@ -1,17 +1,24 @@
-import { gql } from '@apollo/client'
+// apollo/type-defs.ts
+import { gql } from '@apollo/client';
 
-export default gql`
-  type Movie {
-    title: String
-    tagline: String
-    released: Int
-    actors: [Person!]! @relationship(type: "ACTED_IN", direction: IN)
-    directors: [Person!]! @relationship(type: "DIRECTED", direction: IN)
+// Define your GraphQL schema types and queries/mutations
+const typeDefs = gql`
+  type Post {
+    id: ID!
+    content: String!
+    likes: Int!
   }
 
-  type Person {
-    name: String
-    born: Int
-    movies: [Movie!]! @relationship(type: "ACTED_IN", direction: OUT)
+  type Query {
+    posts: [Post!]!
   }
-`
+
+  type Mutation {
+    likePost(postId: ID!): Post!
+    unlikePost(postId: ID!): Post!
+    createPost(content: String!): Post!
+    # Define other mutations here
+  }
+`;
+
+export default typeDefs;

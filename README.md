@@ -1,71 +1,69 @@
-# Neo4j Example with GraphQL and Apollo
+# Social Timeline App
 
-This is a simple setup for Next using Neo4j Database with GraphQL and Apollo. Neo4j's Movies dataset example is used to run the example.
+Welcome to the Social Timeline App! This is a web application built using React, GraphQL, Neo4j, Next.js, and Apollo Client. It allows users to create posts, interact with posts using likes/unlikes, and provides user authentication.
 
-## Deploy your own
+## Table of Contents
 
-Once you have access to [the environment variables you'll need](#step-3-set-up-environment-variables), deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-apollo-neo4j-graphql&project-name=with-apollo-neo4j-graphql&repository-name=with-apollo-neo4j-graphql&env=NEO4J_URI,NEO4J_USER,NEO4J_PASSWORD&envDescription=Required%20to%20connect%20the%20app%20with%20a%20Neo4j%20database&envLink=https://github.com/vercel/next.js/tree/canary/examples/with-apollo-neo4j-graphql%23step-3-set-up-environment-variables)
+## Features
 
-## How to use
+- User registration and login using NextAuth.js.
+- Display a timeline of posts with like/unlike functionality.
+- Create new posts and interact with them.
+- Backend powered by GraphQL with Neo4j database.
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+## Getting Started
 
-```bash
-npx create-next-app --example with-apollo-neo4j-graphql with-apollo-neo4j-graphql-app
-```
+1. Clone this repository to your local machine.
+2. Navigate to the project directory: `cd social-timeline-app`.
 
-```bash
-yarn create next-app --example with-apollo-neo4j-graphql with-apollo-neo4j-graphql-app
-```
+## Project Structure
 
-```bash
-pnpm create next-app --example with-apollo-neo4j-graphql with-apollo-neo4j-graphql-app
-```
+Here's an overview of the project structure:
 
-## Configuration
+social-timeline-app/
+├── components/
+├── pages/
+│ ├── api/
+│ ├── _app.tsx
+│ ├── index.tsx
+│ ├── login.tsx
+│ └── register.tsx
+├── graphql/
+├── backend/
+├── public/
+├── styles/
+├── next.config.js
+├── tsconfig.json
+├── package.json
+└── README.md
 
-### Step 1. Create a Neo4j database
 
-First, you'll need a Neo4j database. [Neo4j Desktop](https://neo4j.com/download/) and [Neo4j Online Sandbox](https://neo4j.com/sandbox/) are good and free-to-use options.
+- `components`: Contains reusable React components.
+- `pages`: Contains Next.js pages and API routes.
+- `graphql`: Holds GraphQL query and mutation definitions.
+- `backend`: Backend setup, GraphQL server, and authentication logic.
+- `public`: Static assets like images.
+- `styles`: Global stylesheets.
+- `next.config.js`: Next.js configuration.
+- `tsconfig.json`: TypeScript configuration.
+- `package.json`: Project dependencies and scripts.
 
-### Step 2. Add the movie graph model to the database
+## Usage
 
-This example uses a database containing _Movies_, you can add it like so:
+1. Install dependencies: `npm install`.
+2. Start the development server: `npm run dev`.
 
-```bash
-:play movie-graph
-```
+## Contributing
 
-Also included is a Cypher [movie sample](./movie-sample.md) query if needed.
+Contributions are welcome! Feel free to open issues and pull requests.
 
-### Step 3. Set up environment variables
+## License
 
-Next, copy the `.env.local.example` file in this directory to `.env.local` (which will be ignored by Git):
-
-```bash
-cp .env.local.example .env.local
-```
-
-Then set each variable on `.env.local` to match your database URI and credentials.
-
-## Deploy on Vercel
-
-You can deploy this app to the cloud with [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
-
-### Deploy Your Local Project
-
-To deploy your local project to Vercel, push it to GitHub/GitLab/Bitbucket and [import to Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example).
-
-**Important**: When you import your project on Vercel, make sure to click on **Environment Variables** and set them to match your `.env.local` file.
-
-### Deploy from Our Template
-
-Alternatively, you can deploy using our template by clicking on the Deploy button below.
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-apollo-neo4j-graphql&project-name=with-apollo-neo4j-graphql&repository-name=with-apollo-neo4j-graphql&env=NEO4J_URI,NEO4J_USER,NEO4J_PASSWORD&envDescription=Required%20to%20connect%20the%20app%20with%20a%20Neo4j%20database&envLink=https://github.com/vercel/next.js/tree/canary/examples/with-apollo-neo4j-graphql%23step-3-set-up-environment-variables)
-
-## Notes
-
-To learn more about how to use the Neo4j GraphQL Library, you can [take a look at the documentation](https://neo4j.com/docs/graphql-manual/current/) or [check out the GitHub repository](https://github.com/neo4j/graphql/).
+This project is licensed under the [MIT License](LICENSE).
