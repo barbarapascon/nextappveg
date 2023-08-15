@@ -1,24 +1,28 @@
-// apollo/type-defs.ts
-import { gql } from '@apollo/client';
+import { gql } from 'apollo-server';
 
-// Define your GraphQL schema types and queries/mutations
-const typeDefs = gql`
-  type Post {
-    id: ID!
-    content: String!
-    likes: Int!
-  }
+export const typeDefs = gql`
+type User {
+  id: ID!
+  username: String!
+  posts: [Post!]!
+}
 
-  type Query {
-    posts: [Post!]!
-  }
+type Post {
+  id: ID!
+  content: String!
+  author: User!
+  likesCount: Int!
+  likedByUser: Boolean!
+}
 
-  type Mutation {
-    likePost(postId: ID!): Post!
-    unlikePost(postId: ID!): Post!
-    createPost(content: String!): Post!
-    # Define other mutations here
-  }
+type Mutation {
+  createPost(content: String!): Post!
+  likePost(postId: ID!): Post!
+  unlikePost(postId: ID!): Post!
+}
+
+type Query {
+  timelinePosts: [Post!]!
+}
 `;
-
 export default typeDefs;

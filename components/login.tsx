@@ -1,43 +1,67 @@
-import { signIn } from 'next-auth/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const LOGIN_MUTATION = gql`
+  mutation LogIn($username: String!, $password: String!) {
+    logIn(username: $username, password: $password) {
+      token
+      user {
+        id
+        username
+      }
+    }
+  }
+`;
 
-  const handleLogin = async () => {
-    const result = await signIn('credentials', {
-      username,
-      password,
-      redirect: false, // We'll handle redirection manually
-    });
+function Login() {
+  const [logIn, { loading, error }] = useMutation(LOGIN_MUTATION);
+  const [loginError, setLoginError] = useState(null);
+  const router = useRouter();
 
-    if (result.error) {
-      alert('Login failed. Please check your credentials.');
-    } else {
-      // Redirect to dashboard or wherever you want
-      window.location.href = '/dashboard';
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const username = e.target.username.value;
+    const password = e.target.password.value;
+
+    try {
+      const { data } = await logIn({ variables: { username, password } });
+
+      if (data) {
+        localStorage.setItem('AUTH_TOKEN', data.logIn.token);
+        router.push('/dashboard');
+      }
+
+    } catch (err) {
+      setLoginError(err.message);
     }
   };
 
   return (
-    <div className="login">
-      <h2>Login</h2>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Username:</label>
+          <input type="text" name="username" required />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input type="password" name="password" required />
+        </div>
+        <button type="submit" disabled={loading}>
+          Login
+        </button>
+      </form>
+
+      {loading && <p>Loading...</p>}
+      {(error || loginError) && <p>Error: {error?.message || loginError}</p>}
+      <p>
+        Don't have an account? <Link href="/signup">Sign up</Link>
+      </p>
     </div>
   );
-};
+}
 
 export default Login;
