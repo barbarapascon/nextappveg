@@ -19,6 +19,7 @@ export const resolvers = {
       session.close();
       return user.records[0].get('u').properties;
     },
+
     posts: async (_, __, { driver }) => {
       const session = driver.session();
       const posts = await session.run("MATCH (p:Post) RETURN p");
@@ -78,11 +79,16 @@ export const resolvers = {
         throw new AuthenticationError("You must be logged in!");
       }
       const session = driver.session();
-      const result = await session.run('MATCH (p:Post {id: $postId}) SET p.likes = p.likes + 1 RETURN p', {
-        postId,
-      });
+      await session.run(
+        `
+        MATCH (u:User), (p:Post)
+        WHERE id(u) = $userId AND id(p) = $postId
+        MERGE (u)-[:LIKES]->(p)
+        `,
+        { userId: req.userId, postId }
+      );
       session.close();
-      return result.records[0].get('p').properties;
+      return { id: postId };
     },
 
     unlikePost: async (_, { postId }, { driver, req }) => {
@@ -90,11 +96,45 @@ export const resolvers = {
         throw new AuthenticationError("You must be logged in!");
       }
       const session = driver.session();
-      const result = await session.run('MATCH (p:Post {id: $postId}) SET p.likes = p.likes - 1 RETURN p', {
-        postId,
-      });
+      await session.run(
+        `
+        MATCH (u:User)-[r:LIKES]->(p:Post)
+        WHERE id(u) = $userId AND id(p) = $postId
+        DELETE r
+        `,
+        { userId: req.userId, postId }
+      );
       session.close();
-      return result.records[0].get('p').properties;
+      return { id: postId };
     }
+  },
+
+  Post: {
+    likesCount: async (post, _, { driver }) => {
+      const session = driver.session();
+      const result = await session.run(
+        'MATCH (p:Post) WHERE id(p) = $postId RETURN SIZE((p)-[:LIKES]->()) as likesCount',
+        { postId: post.id }
+      );
+      session.close();
+      return result.records[0].get('likesCount').toNumber();
+    },
+
+    likedByUser: async (post, _, { driver, req }) => {
+      if (!req.userId) {
+        throw new AuthenticationError("You must be logged in to view this.");
+      }
+
+      const session = driver.session();
+      const result = await session.run(
+        `
+        MATCH (u:User {id: $userId})-[:LIKES]->(p:Post {id: $postId})
+        RETURN EXISTS((u)-[:LIKES]->(p)) as liked
+        `,
+        { userId: req.userId, postId: post.id }
+      );
+      session.close();
+      return result.records[0].get('liked');
+    },
   }
 };

@@ -1,19 +1,27 @@
-import neo4j from 'neo4j-driver'
-import type { Driver } from 'neo4j-driver'
+import { Driver, Session } from 'neo4j-driver';
+import aql from 'neo4j-driver'
+const NEO4J_URI = process.env.NEO4J_URI || 'bolt://2f1824e7.databases.neo4j.io:7687';
+const NEO4J_USER = process.env.NEO4J_USER || 'neo4j';
+const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD || 'z4Tv1T9CDedjPTe9ueiZmjVJQK63yxCl2uGWYanAPkA';
 
-let driver: Driver
+let _driver: Driver;
 
-const defaultOptions = {
-  uri: "bolt://2f1824e7.databases.neo4j.io:7687",
-  username: "neo4j",
-  password: "z4Tv1T9CDedjPTe9ueiZmjVJQK63yxCl2uGWYanAPkA",
+export function getDriver(): Driver {
+  if (!_driver) {
+    _driver = aql.driver(NEO4J_URI, aql.auth.basic(NEO4J_USER, NEO4J_PASSWORD));
+  }
+  return _driver;
 }
 
-export default function getDriver() {
-  const { uri, username, password } = defaultOptions
-  if (!driver) {
-    driver = neo4j.driver(uri, neo4j.auth.basic(username, password));
-  }
+export function getSession(): Session {
+  return getDriver().session();
+}
 
-  return driver
+export const driver = getDriver();
+
+export function closeDriver() {
+  if (_driver) {
+    _driver.close();
+    _driver = null;
+  }
 }
