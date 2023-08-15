@@ -1,7 +1,7 @@
-import { ApolloServer, gql } from 'apollo-server';
-import neo4j from 'neo4j-driver';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { Session } from 'next-auth';
+import { ApolloServer, gql } from 'apollo-server-express';
+import express from 'express';
+import neo4j, { Session, session } from 'neo4j-driver';
+import { NextApiRequest } from 'next'; // Adjust this import as per NextAuth.js documentation
 
 const driver = neo4j.driver(
   'bolt://localhost:7687', // Neo4j URL
@@ -20,23 +20,43 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    likePost(postId: ID!): Post!
+    unlikePost(postId: ID!): Post!
     createPost(content: String!): Post!
-    # Define other mutations here
   }
 `;
 
 const resolvers = {
   Query: {
-    // Implement queries as needed
+    posts: async () => {
+      const session = driver.session();
+      const result = await session.run('MATCH (p:Post) RETURN p');
+      session.close();
+      return result.records.map((record) => record.get('p').properties);
+    },
   },
   Mutation: {
+    likePost: async (_, { postId }) => {
+      const session = driver.session();
+      const result = await session.run('MATCH (p:Post {id: $postId}) SET p.likes = p.likes + 1 RETURN p', {
+        postId,
+      });
+      session.close();
+      return result.records[0].get('p').properties;
+    },
+    unlikePost: async (_, { postId }) => {
+      const session = driver.session();
+      const result = await session.run('MATCH (p:Post {id: $postId}) SET p.likes = p.likes - 1 RETURN p', {
+        postId,
+      });
+      session.close();
+      return result.records[0].get('p').properties;
+    },
     createPost: async (_, { content }, { user }: { user?: Session }) => {
-      // Check if the user is authenticated
       if (!user) {
         throw new Error('Authentication required');
       }
 
-      // Implement creating a post using your database and Neo4j logic
       const session = driver.session();
       const result = await session.run('CREATE (p:Post {content: $content, likes: 0}) RETURN p', {
         content,
@@ -51,10 +71,14 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => ({
-    user: (req as NextApiRequest).session?.user,
+    user: session({ req } as unknown as NextApiRequest).user,
   }),
 });
 
-server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`);
+const app = express();
+server.applyMiddleware({ app });
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
