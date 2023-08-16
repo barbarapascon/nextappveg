@@ -24,6 +24,8 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 20px;
   background-color: lightgreen;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 `;
 
 const Post = styled.div`
@@ -31,7 +33,7 @@ const Post = styled.div`
   margin-bottom: 20px;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 `;
 
 const Content = styled.p`
@@ -42,7 +44,7 @@ const Content = styled.p`
 
 const Author = styled.small`
   display: block;
-  color: lilac;
+  color: #C8A2C8;
   margin-bottom: 10px;
 `;
 
@@ -50,10 +52,13 @@ const InteractionArea = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  background-color: white;
+  padding: 0px;
+  border-top: 2px solid #C8A2C8;
 `;
 
 const LikeCount = styled.span`
-  color: lilac;
+  color: #C8A2C8;
 `;
 
 function PostList() {

@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useMockedQuery } from '../hooks/useMockedQuery';
-import { Header, LogoutButton } from '../styles/styledComponents';
+import { AppIcon, Header, LogoutButton } from '../styles/styledComponents';
 
 const SIGNUP_MUTATION = gql`
   mutation SignUp($username: String!, $password: String!) {
@@ -31,7 +31,7 @@ const Card = styled.div`
   max-width: 400px;
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   background-color: white;
 `;
 
@@ -63,7 +63,7 @@ const Input = styled.input`
 
 const Button = styled.button`
   padding: 10px 15px;
-  background-color:  #C8A2C8;;
+  background-color: #C8A2C8;
   color: white;
   border: none;
   border-radius: 5px;
@@ -85,7 +85,7 @@ const LoginText = styled.p`
 `;
 
 const LoginLink = styled.a`
-  color: lilac;
+  color: #C8A2C8;
   text-decoration: underline;
 `;
 
@@ -130,13 +130,13 @@ function SignUp() {
 
   return (
     <Container>
-    <Header>VEGANHIVE
+    <Header>
+    <AppIcon/>
+    VEGANHIVE
     <Link legacyBehavior href="/login">
-        
     <LogoutButton>Login</LogoutButton>  
     </Link>
-    </Header>  {/* Add your app name or whatever text you want */}
-   
+    </Header> 
     <Container>
       <Card>
         <Title>Sign Up</Title>

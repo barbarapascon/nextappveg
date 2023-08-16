@@ -24,6 +24,7 @@ const Container = styled.div`
   align-items: center;
   height: 100vh;
   background-color: lightgreen;
+  
 `;
 
 const Card = styled.div`
@@ -31,14 +32,14 @@ const Card = styled.div`
   max-width: 400px;
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   background-color: white;
 `;
 
 const Title = styled.h1`
   font-size: 1.5em;
   margin-bottom: 20px;
-  color: lilac;
+  color: #C8A2C8;
 `;
 
 const Form = styled.form`
@@ -57,13 +58,13 @@ const Label = styled.label`
 
 const Input = styled.input`
   padding: 10px;
-  border: 1px solid lilac;
+  border: 1px solid #C8A2C8;
   border-radius: 5px;
 `;
 
 const Button = styled.button`
   padding: 10px 15px;
-  background-color: #C8A2C8;;
+  background-color: #C8A2C8;
   color: white;
   border: none;
   border-radius: 5px;
@@ -89,29 +90,57 @@ const SignUpLink = styled.a`
   text-decoration: underline;
 `;
 
+interface User {
+  id: string;
+  username: string;
+}
+
+interface MockResponse {
+  logIn: {
+      token: string;
+      user: User;
+  };
+} 
+
+function generateUniqueID() {// just for test
+    return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+}
 function Login() {
-  const mockResponse = {
+  const initialMockResponse = {
     logIn: {
       token: 'mocked-token',
       user: {
-        id: 'mocked-id',
+        id: 'user',
         username: 'MockedUsername'
       }
     }
   };
-
-  const { execute: logIn, data, loading, error } = useMockedQuery(LOGIN_MUTATION, { mockData: mockResponse });
-  // const [logIn, { loading, error }] = useMutation(LOGIN_MUTATION);
-
   
-  const [loginError, setLoginError] = useState(null);
+
+  const { execute: logIn, data, loading, error } = useMockedQuery(LOGIN_MUTATION, { mockData: initialMockResponse });
+  // const [logIn, { loading, error }] = useMutation(LOGIN_MUTATION);
+ const [mockResponses, setMockResponses] = useState<MockResponse[]>([initialMockResponse]);
+ const [loginError, setLoginError] = useState<string | null>(null);
+  
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const username = e.target.username.value;
     const password = e.target.password.value;
-
+    const newMockResponse = {
+        logIn: {
+          token: 'some-mocked-token', 
+          user: {
+            id: generateUniqueID(),
+            username: username
+          }
+        }
+      };
+      
+      
+    setMockResponses(initialMockResponse => [...initialMockResponse, newMockResponse]);
+    
     try {
       const result = await logIn();//{ variables: { username, password } 
 
@@ -127,14 +156,13 @@ function Login() {
 
   return (
     <Container>
-      <AppIcon/>
-    <Header>VEGANHIVE
+    <Header>
+    <AppIcon/>
+    VEGANHIVE
     <Link legacyBehavior href="/login">
-        
     <LogoutButton>Login</LogoutButton>  
     </Link>
     </Header>  {/*  */}
-   
     <Container>
       <Card>
         <Title>Login</Title>

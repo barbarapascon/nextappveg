@@ -28,6 +28,7 @@ export const Icon = styled.span`
 
 export const LikeIcon = styled(Icon)`
   background-image: url('/gostar.png'); 
+
 `;
 
 export const UnlikeIcon = styled(Icon)`
