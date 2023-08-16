@@ -31,14 +31,17 @@ const neoSchema = new Neo4jGraphQL({
     resolvers,
 });
 
-async function createApolloServer() {
-    const schema = await neoSchema.getSchema();  // Resolve the promise here
-    
-    return new ApolloServer({
+// Initiate the ApolloServer outside the handler
+let apolloServer;
+
+async function startServer() {
+    const schema = await neoSchema.getSchema();
+    apolloServer = new ApolloServer({
         schema,
         context: contextFunction,
         introspection: true,
     });
+    await apolloServer.start();
 }
 
 export const config = {
@@ -48,6 +51,9 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-    const apolloServer = await createApolloServer();
+    if (!apolloServer) {
+        await startServer();
+    }
+
     return apolloServer.createHandler({ path: '/api/graphql' })(req, res);
 }

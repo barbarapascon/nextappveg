@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { gql } from "@apollo/client";
 import CreatePost from "../components/createPostComponent";
 import PostList from "../components/postListComponent";
+import { useMockedQuery } from '../hooks/useMockedQuery'; // Import the mocked hook
 
 // The 'me' query is designed to fetch details of the currently authenticated user.
 const ME_QUERY = gql`
@@ -18,9 +18,16 @@ const ME_QUERY = gql`
 function HomePage() {
   const router = useRouter();
 
-  // Execute the 'me' query to verify user authentication.
-  const { data, loading, error } = useQuery(ME_QUERY);
+  const mockResponse = {
+    me: {
+      id: 'mocked-id',
+      username: 'MockedUsername'
+    },
+  };
 
+  // Use the mocked query hook with the mock response
+  const { data, loading, error } = useMockedQuery(ME_QUERY, { mockData: mockResponse });
+//const { data, loading, error } = useQuery(ME_QUERY);
   useEffect(() => {
     if (!loading && !data?.me) {
       // If not authenticated, redirect to the login page.
@@ -35,14 +42,17 @@ function HomePage() {
   if (error) return null;
 
   return (
-    <><head>
-      <script src="http://localhost:8097"></script>
-    </head><div>
+    <>
+      <head>
+        <script src="http://localhost:8097"></script>
+      </head>
+      <div>
         <h1>Welcome, {data.me.username}!</h1>
         <CreatePost />
         <h2>Your Timeline</h2>
         <PostList />
-      </div></>
+      </div>
+    </>
   );
 }
 

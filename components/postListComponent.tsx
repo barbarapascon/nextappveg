@@ -4,6 +4,10 @@ import gql from 'graphql-tag';
 import UnlikeButton from './unlikeButtonComponent';
 import LikeButton from './likeButtonComponent';
 
+//tests
+import { useMockedQuery } from '../hooks/useMockedQuery'; // Import the mocked hook
+
+
 const TIMELINE_QUERY = gql`
   query TimelinePosts {
     timelinePosts {
@@ -19,7 +23,24 @@ const TIMELINE_QUERY = gql`
 `;
 
 function PostList() {
-  const { loading, error, data } = useQuery(TIMELINE_QUERY);
+  // Example mock data
+  const mockPostsData = {
+    timelinePosts: [
+      {
+        id: '1',
+        content: 'lets go vegan ihuuuu',
+        likesCount: 5,
+        likedByUser: false,
+        author: { username: 'MockedUser' },
+      },
+      // ... other mocked posts
+    ],
+  };
+
+  // Use the mocked hook instead of the real one
+  const { data, error, loading } = useMockedQuery(TIMELINE_QUERY, { mockData: mockPostsData });
+
+// const { loading, error, data } = useQuery(TIMELINE_QUERY);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -32,7 +53,6 @@ function PostList() {
           <small>By {post.author.username}</small>
           <div>
             {post.likedByUser ? (
-              //create LikeButton and UnlikeButton components below.
               <UnlikeButton postId={post.id} />
             ) : (
               <LikeButton postId={post.id} />

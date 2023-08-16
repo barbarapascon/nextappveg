@@ -1,9 +1,8 @@
-// pages/signup.tsx
 import { useState } from 'react';
-import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { useMockedQuery } from '../hooks/useMockedQuery'; // Import the mocked hook
 
 const SIGNUP_MUTATION = gql`
   mutation SignUp($username: String!, $password: String!) {
@@ -18,7 +17,17 @@ const SIGNUP_MUTATION = gql`
 `;
 
 function SignUp() {
-  const [signUp, { loading, error }] = useMutation(SIGNUP_MUTATION);
+  const mockResponse = {
+    signUp: {
+      token: 'mocked-token',
+      user: {
+        id: 'mocked-id',
+        username: 'MockedUsernameForSignUp'
+      }
+    }
+  };
+
+  const { execute: signUp, data, loading, error } = useMockedQuery(SIGNUP_MUTATION, { mockData: mockResponse });
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -26,13 +35,25 @@ function SignUp() {
     const username = e.target.username.value;
     const password = e.target.password.value;
 
-    try {
-      const { data } = await signUp({ variables: { username, password } });
+    // try {
+    //   const { data } = await signUp({ variables: { username, password } });
       
-      // If registration was successful, store the token and redirect to dashboard or timeline.
-      if (data && data.signUp.token) {
+    //   // If registration was successful, store the token and redirect to dashboard or timeline.
+    //   if (data && data.signUp.token) {
+    //     localStorage.setItem('AUTH_TOKEN', data.signUp.token);
+    //     router.push('/dashboard'); // or '/timeline' if you have that route.
+    //   }
+
+
+
+
+    try {
+      const result = await signUp();
+      
+      // If registration was successful, store the token and redirect.
+      if (result) {
         localStorage.setItem('AUTH_TOKEN', data.signUp.token);
-        router.push('/dashboard'); // or '/timeline' if you have that route.
+        router.push('/home'); // 
       }
     } catch (err) {
       console.error("Signup Error:", err.message);

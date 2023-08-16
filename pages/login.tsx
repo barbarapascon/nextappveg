@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { useMockedQuery } from '../hooks/useMockedQuery'; // Import the mocked hook
 
 const LOGIN_MUTATION = gql`
   mutation LogIn($username: String!, $password: String!) {
@@ -17,7 +17,20 @@ const LOGIN_MUTATION = gql`
 `;
 
 function Login() {
-  const [logIn, { loading, error }] = useMutation(LOGIN_MUTATION);
+  const mockResponse = {
+    logIn: {
+      token: 'mocked-token',
+      user: {
+        id: 'mocked-id',
+        username: 'MockedUsername'
+      }
+    }
+  };
+
+  const { execute: logIn, data, loading, error } = useMockedQuery(LOGIN_MUTATION, { mockData: mockResponse });
+  // const [logIn, { loading, error }] = useMutation(LOGIN_MUTATION);
+
+  
   const [loginError, setLoginError] = useState(null);
   const router = useRouter();
 
@@ -27,9 +40,9 @@ function Login() {
     const password = e.target.password.value;
 
     try {
-      const { data } = await logIn({ variables: { username, password } });
+      const result = await logIn();//{ variables: { username, password } 
 
-      if (data) {
+      if (result) {
         localStorage.setItem('AUTH_TOKEN', data.logIn.token);
         router.push('/home');
       }
