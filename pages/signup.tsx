@@ -1,12 +1,13 @@
+// pages/signup.tsx
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-const LOGIN_MUTATION = gql`
-  mutation LogIn($username: String!, $password: String!) {
-    logIn(username: $username, password: $password) {
+const SIGNUP_MUTATION = gql`
+  mutation SignUp($username: String!, $password: String!) {
+    signUp(username: $username, password: $password) {
       token
       user {
         id
@@ -16,9 +17,8 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-function Login() {
-  const [logIn, { loading, error }] = useMutation(LOGIN_MUTATION);
-  const [loginError, setLoginError] = useState(null);
+function SignUp() {
+  const [signUp, { loading, error }] = useMutation(SIGNUP_MUTATION);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -27,15 +27,15 @@ function Login() {
     const password = e.target.password.value;
 
     try {
-      const { data } = await logIn({ variables: { username, password } });
-
-      if (data) {
-        localStorage.setItem('AUTH_TOKEN', data.logIn.token);
-        router.push('/dashboard');
+      const { data } = await signUp({ variables: { username, password } });
+      
+      // If registration was successful, store the token and redirect to dashboard or timeline.
+      if (data && data.signUp.token) {
+        localStorage.setItem('AUTH_TOKEN', data.signUp.token);
+        router.push('/dashboard'); // or '/timeline' if you have that route.
       }
-
     } catch (err) {
-      setLoginError(err.message);
+      console.error("Signup Error:", err.message);
     }
   };
 
@@ -51,17 +51,15 @@ function Login() {
           <input type="password" name="password" required />
         </div>
         <button type="submit" disabled={loading}>
-          Login
+          Sign Up
         </button>
       </form>
 
       {loading && <p>Loading...</p>}
-      {(error || loginError) && <p>Error: {error?.message || loginError}</p>}
-      <p>
-        Don't have an account? <Link href="/signup">Sign up</Link>
-      </p>
+      {error && <p>Error: {error.message}</p>}
+      <p>Already have an account? <Link href="/login">Log in</Link></p>
     </div>
   );
 }
 
-export default Login;
+export default SignUp;

@@ -1,4 +1,5 @@
-import { AuthenticationError } from 'apollo-server';
+
+import { AuthenticationError } from 'apollo-server-micro';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { gql } from "apollo-server";
+import { gql } from "@apollo/client";
 import CreatePost from "../components/createPostComponent";
 import PostList from "../components/postListComponent";
 
@@ -35,12 +35,14 @@ function HomePage() {
   if (error) return null;
 
   return (
-    <div>
-      <h1>Welcome, {data.me.username}!</h1>
-      <CreatePost />
-      <h2>Your Timeline</h2>
-      <PostList />
-    </div>
+    <><head>
+      <script src="http://localhost:8097"></script>
+    </head><div>
+        <h1>Welcome, {data.me.username}!</h1>
+        <CreatePost />
+        <h2>Your Timeline</h2>
+        <PostList />
+      </div></>
   );
 }
 

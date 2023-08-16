@@ -1,6 +1,6 @@
 import { ApolloServer } from 'apollo-server-micro';
-import { typeDefs } from '../../apollo/type-defs';
-import { resolvers } from '../../apollo/resolvers';
+import { typeDefs } from './apollo/type-defs';
+import { resolvers } from './apollo/resolvers';
 import { Neo4jGraphQL } from '@neo4j/graphql';
 import { driver } from '../../util/neo4j';
 import * as jwt from 'jsonwebtoken';
