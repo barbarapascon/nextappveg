@@ -21,7 +21,7 @@ function HomePage() {
   const mockResponse = {
     me: {
       id: 'mocked-id',
-      username: 'MockedUsername'
+      username: 'BarbaraPascon'
     },
   };
 
@@ -42,17 +42,14 @@ function HomePage() {
   if (error) return null;
 
   return (
-    <>
-      <head>
-        <script src="http://localhost:8097"></script>
-      </head>
+ 
       <div>
         <h1>Welcome, {data.me.username}!</h1>
         <CreatePost />
         <h2>Your Timeline</h2>
         <PostList />
       </div>
-    </>
+
   );
 }
 

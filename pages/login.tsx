@@ -1,8 +1,10 @@
+import styled from 'styled-components';
 import { useState } from 'react';
 import gql from 'graphql-tag';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useMockedQuery } from '../hooks/useMockedQuery'; // Import the mocked hook
+import { useMockedQuery } from '../hooks/useMockedQuery';
+import { AppIcon, Header, LogoutButton } from '../styles/styledComponents';
 
 const LOGIN_MUTATION = gql`
   mutation LogIn($username: String!, $password: String!) {
@@ -14,6 +16,77 @@ const LOGIN_MUTATION = gql`
       }
     }
   }
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: lightgreen;
+`;
+
+const Card = styled.div`
+  width: 80%;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+`;
+
+const Title = styled.h1`
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: lilac;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const InputGroup = styled.div`
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  margin-bottom: 5px;
+  color: gray;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid lilac;
+  border-radius: 5px;
+`;
+
+const Button = styled.button`
+  padding: 10px 15px;
+  background-color: #C8A2C8;;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+`;
+
+const Status = styled.p`
+  text-align: center;
+  margin: 20px 0;
+`;
+
+const Error = styled(Status)`
+  color: red;
+`;
+
+const SignUpText = styled.p`
+  text-align: center;
+`;
+
+const SignUpLink = styled.a`
+  color: #C8A2C8;
+  text-decoration: underline;
 `;
 
 function Login() {
@@ -53,27 +126,43 @@ function Login() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input type="text" name="username" required />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" name="password" required />
-        </div>
-        <button type="submit" disabled={loading}>
-          Login
-        </button>
-      </form>
+    <Container>
+      <AppIcon/>
+    <Header>VEGANHIVE
+    <Link legacyBehavior href="/login">
+        
+    <LogoutButton>Login</LogoutButton>  
+    </Link>
+    </Header>  {/*  */}
+   
+    <Container>
+      <Card>
+        <Title>Login</Title>
+        <Form onSubmit={handleSubmit}>
+          <InputGroup>
+            <Label>Username:    </Label>
+            <Input type="text" name="username" required />
+          </InputGroup>
+          <InputGroup>
+            <Label>Password:       </Label>
+            <Input type="password" name="password" required />
+          </InputGroup>
+          <Button type="submit" disabled={loading}>
+            Login
+          </Button>
+        </Form>
 
-      {loading && <p>Loading...</p>}
-      {(error || loginError) && <p>Error: {error?.message || loginError}</p>}
-      <p>
-        Don't have an account? <Link href="/signup">Sign up</Link>
-      </p>
-    </div>
+        {loading && <Status>Loading...</Status>}
+        {(error || loginError) && <Error>Error: {error?.message || loginError}</Error>}
+        <SignUpText>
+          Don't have an account? 
+          <Link legacyBehavior href="/signup">
+            <SignUpLink>Sign up</SignUpLink>
+          </Link>
+        </SignUpText>
+      </Card>
+    </Container>
+    </Container>
   );
 }
 

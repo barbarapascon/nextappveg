@@ -1,8 +1,10 @@
+import styled from 'styled-components';
 import { useState } from 'react';
 import gql from 'graphql-tag';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useMockedQuery } from '../hooks/useMockedQuery'; // Import the mocked hook
+import { useMockedQuery } from '../hooks/useMockedQuery';
+import { Header, LogoutButton } from '../styles/styledComponents';
 
 const SIGNUP_MUTATION = gql`
   mutation SignUp($username: String!, $password: String!) {
@@ -14,6 +16,77 @@ const SIGNUP_MUTATION = gql`
       }
     }
   }
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: lightgreen;
+`;
+
+const Card = styled.div`
+  width: 80%;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+`;
+
+const Title = styled.h1`
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color:  #C8A2C8;;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const InputGroup = styled.div`
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  margin-bottom: 5px;
+  color: gray;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid  #C8A2C8;;
+  border-radius: 5px;
+`;
+
+const Button = styled.button`
+  padding: 10px 15px;
+  background-color:  #C8A2C8;;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+`;
+
+const Status = styled.p`
+  text-align: center;
+  margin: 20px 0;
+`;
+
+const Error = styled(Status)`
+  color: red;
+`;
+
+const LoginText = styled.p`
+  text-align: center;
+`;
+
+const LoginLink = styled.a`
+  color: lilac;
+  text-decoration: underline;
 `;
 
 function SignUp() {
@@ -34,8 +107,7 @@ function SignUp() {
     e.preventDefault();
     const username = e.target.username.value;
     const password = e.target.password.value;
-
-    // try {
+  // try {
     //   const { data } = await signUp({ variables: { username, password } });
       
     //   // If registration was successful, store the token and redirect to dashboard or timeline.
@@ -45,15 +117,11 @@ function SignUp() {
     //   }
 
 
-
-
     try {
       const result = await signUp();
-      
-      // If registration was successful, store the token and redirect.
       if (result) {
         localStorage.setItem('AUTH_TOKEN', data.signUp.token);
-        router.push('/home'); // 
+        router.push('/home');
       }
     } catch (err) {
       console.error("Signup Error:", err.message);
@@ -61,25 +129,42 @@ function SignUp() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input type="text" name="username" required />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" name="password" required />
-        </div>
-        <button type="submit" disabled={loading}>
-          Sign Up
-        </button>
-      </form>
+    <Container>
+    <Header>VEGANHIVE
+    <Link legacyBehavior href="/login">
+        
+    <LogoutButton>Login</LogoutButton>  
+    </Link>
+    </Header>  {/* Add your app name or whatever text you want */}
+   
+    <Container>
+      <Card>
+        <Title>Sign Up</Title>
+        <Form onSubmit={handleSubmit}>
+          <InputGroup>
+            <Label>Username:</Label>
+            <Input type="text" name="username" required />
+          </InputGroup>
+          <InputGroup>
+            <Label>Password:</Label>
+            <Input type="password" name="password" required />
+          </InputGroup>
+          <Button type="submit" disabled={loading}>
+            Sign Up
+          </Button>
+        </Form>
 
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
-      <p>Already have an account? <Link href="/login">Log in</Link></p>
-    </div>
+        {loading && <Status>Loading...</Status>}
+        {error && <Error>Error: {error.message}</Error>}
+        <LoginText>
+          Already have an account? 
+          <Link legacyBehavior href="/login">
+            <LoginLink>Log in</LoginLink>
+          </Link>
+        </LoginText>
+      </Card>
+    </Container>
+    </Container>
   );
 }
 

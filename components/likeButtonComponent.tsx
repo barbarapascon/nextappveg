@@ -1,6 +1,9 @@
 import gql from 'graphql-tag';
+import React from 'react';
+
 //tests
 import { useMockedQuery } from '../hooks/useMockedQuery';
+import { LikeIcon, Button } from '../styles/styledComponents';
 
 const LIKE_POST_MUTATION = gql`
   mutation LikePost($postId: ID!) {
@@ -27,9 +30,10 @@ function LikeButton({ postId }) {
 
   return (
     <div>
-      <button onClick={likePost} disabled={loading}>
-        Like
-      </button>
+      <Button onClick={likePost} disabled={loading}>
+      <LikeIcon />
+           
+      </Button>
       {error && <p>Error: {error.message}</p>}
     </div>
   );

@@ -1,6 +1,8 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag';  // Import the styled components
+
 //tests
 import { useMockedQuery } from '../hooks/useMockedQuery';
+import { Button, UnlikeIcon } from '../styles/styledComponents';
 
 const UNLIKE_POST_MUTATION = gql`
   mutation UnlikePost($postId: ID!) {
@@ -27,9 +29,9 @@ function UnlikeButton({ postId }) {
   // });
   return (
     <div>
-      <button onClick={unlikePost} disabled={loading}>
-        Unlike
-      </button>
+      <Button onClick={unlikePost} disabled={loading}>
+      <UnlikeIcon />
+      </Button>
       {error && <p>Error: {error.message}</p>}
     </div>
   );
