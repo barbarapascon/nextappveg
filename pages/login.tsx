@@ -104,18 +104,20 @@ interface MockResponse {
 
 function generateUniqueID() {// just for test
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
-}
-function Login() {
-  const initialMockResponse = {
+} 
+
+export let initialMockResponse = {
     logIn: {
       token: 'mocked-token',
       user: {
-        id: 'user',
-        username: 'MockedUsername'
+        id: '1',
+        username: 'BarbaraPascon'
       }
     }
   };
   
+function Login() {
+
 
   const { execute: logIn, data, loading, error } = useMockedQuery(LOGIN_MUTATION, { mockData: initialMockResponse });
   // const [logIn, { loading, error }] = useMutation(LOGIN_MUTATION);
@@ -139,13 +141,22 @@ function Login() {
       };
       
       
-    setMockResponses(initialMockResponse => [...initialMockResponse, newMockResponse]);
-    
+      initialMockResponse = {
+        logIn: {
+          token: generateUniqueID(),
+          user: {
+            id: generateUniqueID(),
+            username: username
+          }
+        }
+      };
+
     try {
       const result = await logIn();//{ variables: { username, password } 
 
       if (result) {
         localStorage.setItem('AUTH_TOKEN', data.logIn.token);
+
         router.push('/home');
       }
 

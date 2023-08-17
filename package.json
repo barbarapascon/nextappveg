@@ -12,6 +12,7 @@
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.5",
     "@neo4j/graphql": "^3.24.1",
+    "@types/styled-components": "^5.1.26",
     "apollo-server": "^3.12.0",
     "apollo-server-micro": "^3.12.0",
     "babel-plugin-styled-components": "^2.1.4",

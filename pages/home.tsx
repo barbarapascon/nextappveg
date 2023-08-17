@@ -6,6 +6,7 @@ import CreatePost from "../components/createPostComponent";
 import PostList from "../components/postListComponent";
 import { useMockedQuery } from '../hooks/useMockedQuery'; // Import the mocked hook
 import { AppIcon, Container, Header, LogoutButton, Subtitle, WelcomeMessage } from "../styles/styledComponents";
+import { initialMockResponse } from "./login";
 // Styled components
 // The 'me' query to fetch details of the currently authenticated user.
 const ME_QUERY = gql`
@@ -28,8 +29,8 @@ function Home() {
   };
   const mockResponse = {
     me: {
-      id: 'mocked-id',
-      username: 'BarbaraPascon'
+      id: initialMockResponse.logIn.user.username,
+      username: initialMockResponse.logIn.user.username
     },
   };
   
